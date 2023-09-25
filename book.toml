@@ -1,0 +1,6 @@
+[book]
+authors = ["SatanLovesPrinters"]
+language = "en"
+multilingual = false
+src = "src"
+title = "My-First-Page"
