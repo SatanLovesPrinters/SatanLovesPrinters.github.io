@@ -1,8 +1,9 @@
 # Summary
 
-Obtained from [My Public Repository](https://github.com/SatanLovesPrinters/ZeroToHero)
+Obtained from [My GitHub Profile/HQ](https://github.com/SatanLovesPrinters/ZeroToHero)
 
 ## Table of Contents
-- [00 - Fundamentals of PowerShell](./00%20-%20Fundamentals%20of%20PowerShell.md)
-- [01 - Git Learning](./01%20-%20Git%20Learning.md)
-- [02 - LinkedIn Learning Full History](./02%20-%20LinkedIn%20Learning%20Full%20History.md)
+- [Fundamentals - PowerShell](./Fundamentals%20-%20PowerShell.md)
+- [Fundamentals - Git](./Fundamentals%20-%20Git.md)
+- [Fundamentals - Troubleshooting MSP 101](./Fundamentals%20-%20Troubleshooting%20MSP%20101.md)
+- [Fundamentals - Networking](./Fundamentals%20-%20Networking.md)
