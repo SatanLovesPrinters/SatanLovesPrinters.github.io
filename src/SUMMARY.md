@@ -1,6 +1,6 @@
 # Summary
 
-Obtained from [My GitHub Profile/HQ](https://github.com/SatanLovesPrinters/ZeroToHero)
+Obtained from [My GitHub Profile/HQ](https://github.com/SatanLovesPrinters/ZeroToHero/)
 
 ## Fundamentals
 - [Fundamentals - PowerShell](./Fundamentals%20-%20PowerShell.md)
