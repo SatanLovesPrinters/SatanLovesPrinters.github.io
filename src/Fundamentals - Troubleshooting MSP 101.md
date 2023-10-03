@@ -29,6 +29,7 @@ Start-ADSyncSyncCycle -PolicyType Delta #For Servers Post AD Changes
 Test-ComputerSecureChannel -verbose #For Workstations
 Get-Service | Where-Object {$_.Status -eq 'Stopped' -and $_.startType -eq 'Automatic'} | #Workstations & Servers
 manage-bde -status #Check Bitlocker Drive Encryption
+runas /user:DOMAIN\user.name cmd
 ```
 #### CMD / General Workstation Repair
 ```cmd
@@ -92,4 +93,160 @@ net stop w32time && net start w32time && w32tm /resync
     - If No: Confirm access to domain
         - ```Test-ComputerSecureChannel -verbose```
 
-### Outlook / Mobile Device Outlook & Native iOS Mail App Troubleshooting
+### Sledgehammer Solutions - Least Probable, but Randomly Applicable
+
+1. Register misfit applications based on their .dll location. 
+    - The idea is to 'resync' the Operating System / File Explorer to the Application. 
+    - Think of this like Cache related errors:
+        - If the OS is utilizing the wrong trusted information & applying it 'truthfully' there eventually becomes a battle of attrition between two competing 'truthful' processes. This is the phase where Addins/Applications go non responsive for an extended period of time: Utilizing workstation & network resources: Eventually the application will fail & **sometimes an event is triggered / logged to the System / Application logs**
+        ```cmd
+        regsvr32.exe /s /n /i:user "C:\Users\<UserProfileName>\AppData\Local\Microsoft\TeamsMeetingAddin\<VERSION NUMBER>\x64\Microsoft.Teams.AddinLoader.dll"
+        ```
+        - Swap out \<UserProfileName> & \<VERSION NUMBER>
+            - \<VERSION NUMBER> : Found from **Teams > Ellipses (...) > Settings > (i) About Teams**
+2. Registry Editor 
+    - Review / Google: "[**Application Name**]" & "[**Error Description**]" & "[**Registry Fix**]"
+
+### Outlook Support
+- Recreate Mail Profile
+- Full Online Repair
+- Registry / GPO Review
+- Event Viewer
+
+
+### Printer Support
+```
+Adding Printers - General Guidance
+
+DC from VPN for a local printer
+Add by TCP/IP & Share (List by IP assigned to)
+Log into the printer IP (192.1.x.x) > Setup Scan to Email & Shared Drives
+
+Add Printer Wizard from Admin Panel
+- CMD Admin > Rundll32 printui.dll,PrintUIEntry /il
+- Try adding as User once more (above only installs the driver as an admin)
+
+
+
+verify print driver
+verify windows
+verify hardware
+if (generic/text only doesn't work) = print driver is incorrect
+if (not found) = verify its plugged into the network or computer
+if (not found) = check Control Panel & see where its being shared from
+if (test print) = no test print then Computer & Printer have no connectivity
+
+if (Port) = IP, then its networked
+if (Sharing) > in Control Panel > you see "printer on azdc-xxx"
+```
+
+Creating a Local Printer Port (Print Server communicates to PC, local access to printer on PC)
+- Printers & Scanners
+- Add Printer (from User PC)
+- Create local printer or network printer
+- Create a new port: TCP/IP
+- Enter IP of Printer (properties of printer from print server)
+- Select the driver
+- Complete Installation
+
+Check the Printer Configuration Files [MS - DOC](https://support.microsoft.com/en-us/topic/how-to-troubleshoot-general-printing-problems-in-windows-server-2003-when-you-use-office-products-54489287-c64b-492d-5d52-846711f160b5)
+- Delete default printer
+- Computer Management
+- Services & Applications > Click Services
+- Right Click "Print Spooler" = STOP
+    - C:\WINDOWS\system32\spool\drivers\w32x86\3
+    - delete the files inside the 3 folder
+- Computer Management
+- Services & Applications > Click Services
+- 2x Click Print Spooler: Startup Type:: AUTOMATIC
+- After updating printer files, reinstall printer
+
+### Network Support
+
+```
+netsh interface show interface
+Get-NetIPInterface / Set-NetIPInterface
+```
+
+#### DFS Replication - Troubleshooting
+```
+1)      Connect to Desktop, place Company_Test_Desktop in folder
+a.       How long did it take to appear on the below step:
+
+2)      Connect to Laptop on secure WiFi, Connect to NetExtender, (~how long/time to connect)
+
+3)      Connect to Laptop on the Hotspot, Connect to NetExtender, Compare the speeds
+
+4)      Place Company_Test_Laptop into Folder (while on Hotspot) > Compare Speeds
+a.       How long did it take to appear:
+
+5)      Have another user in the office place an Company_Test_Office in the folder
+a.       How long to see that item in the folder?
+
+6)      Make a change on that document & ask the other user how long it takes to see that change
+```
+
+#### General Networking Audit / Confirmation of Issue
+```
+From the Server
+Ping the internal firewall IP
+Ping the external firewall IP
+Ping an end user internal IP
+Ping an external IP (8.8.8.8)
+From end user PC
+Ping the internal firewall IP
+Ping the external firewall IP
+Ping an end user internal IP
+From my End
+Ping the external firewall
+Ping the external user IP
+
+Move to a different location > Bandwidth-Test
+Does the network have a firewall?
+Can you update the firmware? 
+
+Network is Slow Troubleshooting
+1. Find Client's External IP & Ping from myWorkPC | Ping my IP from user's PC
+2. Look for latency change. Run speedtest.net on WLAN & LAN if possible. On VPN/Off VPN.
+3. Ping firewall to check, ping -t to check dropped packets, then tracert firewall
+4. (Server) Ping firewall, ping internal IP, ping hostnames. Connect to Firewall > Speedtests again.
+5. ipconfig/all for all devices, try a winsock reset/internet connection reset
+
+Continue Scoping Questions: 
+- Recent changes? 
+- When did this start? 
+- Are you the first to report it? How long? Is there a pattern?
+
+
+If no, move to his machine and run the same tests from his machine to Company IPs. On a mac you'd use the "terminal" and ifconfig commands instead of ipconfig used for windows.
+___Always do a power cycle on the modem at first
+
+Questions to ASK:
+1. What device are you using to connect?
+2. Are other people able to connect?
+3. Why are you using this network?
+4. And if youve been using this network, any recent changes to it that you know of? 
+```
+
+#### Uncommon Firewall Issue / Phone / SMS / SMMS Mobile Devices Unable to Send Outbound on Enterprise Network
+```
+Can't Send SMS over Network? Autoforward / Unblock any traffic from *.apple.com or exclusive to
+https://courier.push.apple.com/
+```
+
+
+### Password Support
+
+- Always connect to VPN or be on office network
+- In CW > Companies > Configuration > *mail [configuration type]
+    - Click on O365 & look at where the O365 sync server is located
+    - Connect to VPN > Ctrl + Alt + Del > Change your password > [Win]+L > Login with New Password
+
+**Password Reset (Out of Sync w/ DC)**
+
+- Connect to the PC
+- If (locked) with new set password >Try to unlock with old PW
+- Set AD Password to the Expired PW > Reattempt signing into PC
+- Connect to the VPN with the newly refreshed old password
+- May have to wait 24-48 hours : 
+    - Now you can Ctrl + Alt + Del > Change your password > [Win]+L > Login with New Password.
