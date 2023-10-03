@@ -1,6 +1,6 @@
 # Summary
 
-Obtained from [My GitHub Profile/HQ](https://github.com/SatanLovesPrinters/ZeroToHero/tree/main)
+Obtained from [My GitHub Profile/HQ](https://github.com/SatanLovesPrinters.html)
 
 # Fundamentals
 
