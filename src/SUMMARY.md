@@ -11,4 +11,4 @@ Obtained from [My GitHub Profile/HQ](https://github.com/SatanLovesPrinters.html)
 
 # Scripts / Projects
 
-[Scripts - User & Group Permissions](./Scripts%20-%20Group%20Permissions.md)
+- [Scripts - User & Group Permissions](./Scripts%20-%20Group%20Permissions.md)
